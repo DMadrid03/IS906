@@ -1,7 +1,7 @@
 import express from 'express';
 import {loadEnvFile} from "node:process"
-import todoRoutes from '../routes/todo.routes';
-import { errorHandler } from '../middlewares/errorHandler';
+import todoRoutes from './src/routes/todo.routes';
+import { errorHandler } from './src/middlewares/errorHandler';
 
 
 loadEnvFile('.env');

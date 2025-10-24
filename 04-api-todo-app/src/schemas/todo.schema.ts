@@ -8,6 +8,16 @@ export const todoSchema = z.object({
 
 });
 
+export const todoUpdateSchema = z.object({
+    id: z.string(),
+    title: z.string().optional(),
+    description: z.string().optional(),
+    completed: z.boolean().optional().default(false)
+});
+
+export const validateTodoUpdate = (todo: Partial<Todo>) => {
+    return todoUpdateSchema.safeParse(todo);
+}
 export const validateTodo = (todo: Partial<Todo>) => {
     return todoSchema.safeParse(todo);
 }

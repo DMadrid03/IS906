@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import * as TodoService from '../services/todo.service';
 import { validate } from 'uuid';
-import { validateTodo } from '../schemas/todo.schema';
+import { validateTodo, validateTodoUpdate } from '../schemas/todo.schema';
 //definir métodos que van a gestionar las rutas
 
 
@@ -51,5 +51,32 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
 
 export const update = async (req: Request, res: Response) => {
     //actualizar una tarea
-    res.send(`Update todo with id ${req.params.id}`);
+    
+    const {success,error,data} = validateTodoUpdate(req.body);
+
+    if(!success){
+        return res.status(400).json(error.issues);
+    }
+
+    //sacar id de data
+    const {id} = data;
+
+    const updatedTodo = await TodoService.update(id, data);
+    if(!updatedTodo){
+        return res.status(404).json({message: `Tarea con id ${id} no encontrada`});
+    }
+    res.json(updatedTodo);
+
 }
+
+export const remove = async(req: Request, res: Response) =>{
+    
+    //eliminar una tarea
+    const {id} = req.params;
+    const deleted = await TodoService.remove(id);
+    if(!deleted){
+        return res.status(404).json({message: `Tarea con id ${id} no encontrada`});
+    }
+    res.status(204).send();
+}
+

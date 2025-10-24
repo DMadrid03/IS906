@@ -4,6 +4,7 @@ import { title } from "process";
 import { Todo } from "../interfaces/todo.interface";
 // import {v4 as uuid} from 'uuid';
 import {randomUUID as uuid} from 'node:crypto'; //desde node 14.17.0
+import { todo } from "node:test";
 
 
 //todo: conectar a la base de datos (vamos a usar prisma también )
@@ -31,5 +32,23 @@ export const create = async (todo: Partial <Todo>):Promise<Todo> => {
     todos.push(newTodo);
     return newTodo;
 }
+export const update = async (id:string, todo: Partial<Todo>):Promise<Todo | null> => {
+    const index = todos.findIndex(t => t.id === id);
+    if(index === -1) return null;
+    const updatedTodo = {
+        ...todos[index],
+        ...todo,
+        id 
+    };
+    todos[index] = updatedTodo;
+    return updatedTodo;
+}
 
+export const remove = async (id: string):Promise<boolean> => {
 
+    //quitar la tarea id de el array
+    const index = todos.findIndex(t => t.id === id);
+    if(index === -1) return false;
+    todos.splice(index,1);
+    return true;
+}
